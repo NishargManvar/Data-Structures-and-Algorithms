@@ -23,12 +23,11 @@ def binary_search_modified(sequence):
 	#Initalize required variables
 	list_size = len(sequence)
 	start = 0 	#Index of first element of active search window
-	end = list_size - 1 	#Index of last element of active wsearch window
-	
+	end = list_size - 1 	#Index of last element of active wsearch wi
 	#Applying loop of modified binary search
 	while(start <= end):
 		if start==end: 	#If start = end return number at start/end
-			return int(sequence[start])
+			return sequence[start]
 		
 		mid = int((start+end)/2) 	#Index of middle element of active search window
 
@@ -36,7 +35,7 @@ def binary_search_modified(sequence):
 		# compare it with adjacent numbers and take appropriate steps
 		if(mid != 0 and mid != list_size-1):
 			if(sequence[mid]>sequence[mid+1] and sequence[mid]>sequence[mid-1]):
-				return int(sequence[mid])
+				return sequence[mid]
 
 			elif(sequence[mid]>sequence[mid+1] and sequence[mid]<sequence[mid-1]):
 				end = mid-1
@@ -48,7 +47,7 @@ def binary_search_modified(sequence):
 		# it's right element and take appropriate steps
 		elif(mid == 0):
 			if(sequence[mid]>sequence[mid+1]):
-				return int(sequence[mid])
+				return sequence[mid]
 			else:
 				start = mid+1
 
@@ -56,7 +55,7 @@ def binary_search_modified(sequence):
 		# it's left element and take appropriate steps
 		else:
 			if(sequence[mid]>sequence[mid-1]):
-				return int(sequence[mid])
+				return sequence[mid]
 			else:
 				end = mid - 1
 
@@ -87,10 +86,10 @@ def max_in_unimodal_array():
 			return
 
 	#Converting list of numbers stored as strings to int data type
-	list_of_numbers = list(map(int, list_of_numbers))
+	list_of_numbers = list(map(float, list_of_numbers))
 	
 	print()
-	print("The maximum element in the unimodal array is : %d"%binary_search_modified(list_of_numbers)) #Calling modified binary search function and printing result
+	print("The maximum element in the unimodal array is : %f"%binary_search_modified(list_of_numbers)) #Calling modified binary search function and printing result
 	print()
 
 #Calling the initial call function
