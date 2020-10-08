@@ -1,43 +1,63 @@
+"""
+PURPOSE : Find ten greatest numbers in a sequence of numbers (Q3)
+AUTHOR : Manvar Nisharg (EE19B094)
+DATE : 1st October 2020
+INPUT : k (the number of greatest number needed) , sequence of numbers
+OUTPUT : k greatest number in the sequence
+NOTE : Please use python 3.x as several functions used as only compatible with python 3 or later versions
+"""
+
+
+
+
+#import header files
+import sys
+
+#Class to implement Min Heap Data structure
 class minHeap:
 	def __init__(self,max_heapsize):
-		self.currentsize = 0
-		self.maxsize = max_heapsize
-		self.heap = [0] * (max_heapsize + 1)
-		self.heap[0] = -1 * max_heapsize
+		self.currentsize = 0	#Currentsize of heap
+		self.maxsize = max_heapsize	 #Maxsize of heap
+		self.heap = [0] * (max_heapsize + 1) 	#Initalize all nodes of heap
+		self.heap[0] = -1 * sys.maxsize 	#Initalize reference node
 
-	def get_left_child(self,index):
-		return 2*index
+	#Function to return index of left child of a node
+	get_left_child = lambda self,index : 2*index
 
-	def get_right_child(self,index):
-		return (2*index)+1
+	#Function to return index of right child of a node
+	get_right_child = lambda self,index : (2*index)+1
 
-	def get_parent(self,index):
-		return index//2
+	#Function to return index of parent of a node
+	get_parent = lambda self,index : index//2
 
-	def isLeaf(self,index):
-		if index >= self.currentsize//2 and index <= self.currentsize:
-			return 1
-		return 0
-
+	#Function that returns if given index node is a leaf
+	is_leaf = lambda self,index : index > self.currentsize//2 and index <= self.currentsize
+		
+	#Function to swap two nodes
 	def swap_nodes(self,index1,index2):
 		self.heap[index1] , self.heap[index2] = self.heap[index2] , self.heap[index1]
 
+	#Recursive function to heapify a node
 	def minHeapify(self,index):
-		if not self.isLeaf(index):
-			if self.heap[index] >= self.heap[self.get_left_child(index)] or self.heap[index] >= self.heap[self.get_right_child(index)]:
+		if self.is_leaf(index):
+			return
 
-				if self.heap[self.get_left_child(index)] <= self.heap[self.get_right_child(index)]:
-					self.swap_nodes(index,self.get_left_child(index))
-					self.minHeapify(self.get_left_child(index))
+		if self.heap[index] > self.heap[self.get_left_child(index)] or self.heap[index] > self.heap[self.get_right_child(index)]:
 
-				else:
-					self.swap_nodes(index,self.get_right_child(index))
-					self.minHeapify(self.get_right_child(index))
+			if self.heap[self.get_left_child(index)] < self.heap[self.get_right_child(index)]:
+				self.swap_nodes(index,self.get_left_child(index))
+				self.minHeapify(self.get_left_child(index))
 
+			else:
+				self.swap_nodes(index,self.get_right_child(index))
+				self.minHeapify(self.get_right_child(index))
+
+	#Heapify all the nodes
 	def minHeap_whole(self):
 		for index in range (self.currentsize//2-1,0,-1):
 			self.minHeapify(index)
 	
+	#Function to insert node in the tree at right index
 	def insert_node(self,value):
 		if self.currentsize >= self.maxsize:
 			return 0
@@ -51,15 +71,7 @@ class minHeap:
 			self.swap_nodes(current_node, self.get_parent(current_node))
 			current_node = self.get_parent(current_node)
 
-	def print_Heap(self,index):
-		if index > self.currentsize:
-			return
-
-		print("%d "%self.heap[index],end = " ")
-
-		self.print_Heap(self.get_left_child(index))
-		self.print_Heap(self.get_right_child(index))
-
+	#Function to delete minimum element (i.e. head) of the tree and heapify the tree
 	def delete_min(self):
 		value = self.heap[1]
 		self.heap[1] = self.heap[self.currentsize]
@@ -67,6 +79,18 @@ class minHeap:
 		self.minHeapify(1)
 		return value
 
+	#Printing PreOrder Traversal of the tree with node at index as root
+	#For printing whole tree index = 1
+	def print_Heap(self,index):
+		if index > self.currentsize:
+			return
+
+		print("%f "%self.heap[index],end = " ")
+
+		self.print_Heap(self.get_left_child(index))
+		self.print_Heap(self.get_right_child(index))
+
+#Call function to implement the algorithm
 def ten_greatest_number():
 	print()
 	print("To find k greatest numbers in a sequence of n numbers")
@@ -74,7 +98,7 @@ def ten_greatest_number():
 
 	k = 0
 	while(k <= 0): 	#Taking k as input from user untill valid input is not received
-		k = int(input("Enter k (>0) : ")) 	#Storing the value in k
+		k = int(input("Enter k (>0) : "))
 		print()
 
 
@@ -92,26 +116,22 @@ def ten_greatest_number():
 			sequence = input("Enter sequence of numbers seperated by space : ")
 		list_of_numbers = sequence.split()
 
-	Heap = minHeap(len(list_of_numbers))
+	Heap = minHeap(len(list_of_numbers)+1) #Initalize min-heap
 
-#Add k numbers into the linkedlist in sorted number as base case
-	count = 0	#Count variable to keep count of numbers added in the linkedlist
-	x = 0 	#Loop index for traversing through the list
-	while count != k and x < len(list_of_numbers): 	#Add numbers into linkedlist till count becomes k or we reach end of list
-		Heap.insert_node(int(list_of_numbers[x])) 	#Try adding number into linkedlist using addnode and if number is added increase count by 1
-		count = count + 1
-		x = x + 1 	#Increase loop index by 1
+	#Add k numbers into the min-heap as base case
+	for number in list_of_numbers[0:k]:
+		Heap.insert_node(float(number)) 
 
-	Heap.print_Heap(1)
-	print()
+	
+	#Iterate through rest of the numbers and if it is bigger than the smallest number then add it into the heap and remove the smallest number
+	for a in range(k,len(list_of_numbers)):
+		if(Heap.heap[1]<float(list_of_numbers[a])):
+			Heap.delete_min()
+			Heap.insert_node(float(list_of_numbers[a]))
+			#Heap.delete_min()
 
 
-	for a in range(x,len(list_of_numbers)):
-		if(Heap.heap[1]<int(list_of_numbers[a])):
-			Heap.insert_node(int(list_of_numbers[a]))
-			Heap.print_Heap(1)
-			print("%d"%Heap.delete_min())
-
+	#Printing the result
 	if len(list_of_numbers) < k:
 		print("The %d (as input had size less than k (%d) ) greatest numbers are :"%(list_elements_count,k))
 	else:
@@ -120,5 +140,5 @@ def ten_greatest_number():
 
 
 
-
+#Calling the function
 ten_greatest_number()
