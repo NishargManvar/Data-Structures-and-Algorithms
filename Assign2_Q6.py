@@ -13,24 +13,24 @@ from array import array #Importing necessary files
 Function to merge two sorted subarrays into one
 
 :param arr: The array whose two subarrays are to be merged
+:param type: list
 :param start: The starting index in arr from where elements are to be merged(i.e. starting index of first subarray)
+:param type: int
 :param mid: The midpoint index in arr (i.e. index where two subarrays are to be divided)
+:param type: int
 :param end: The endpoint index in arr till where elements are to be merged(i.e. ending index of second subarray)
+:param type: int
 """
 def merge(arr, start, mid, end): 
     #size of arrays to be merged
     size_left = mid - start + 1
     size_right = end - mid 
   
-    # Initalize arrays to store values temporarily
-    temp_left = [0] * (size_left) 
-    temp_right = [0] * (size_right) 
   
-    #Copy data from original arrays to temporary arrays
-    for i in range(0 , size_left): 
-        temp_left[i] = arr[start + i] 
-    for i in range(0 , size_right): 
-        temp_right[i] = arr[mid + 1 + i] 
+    ##Initalize temporary arrays and copy data from original arrays to temporary arrays
+    temp_left = arr[start : start + size_left]
+    temp_right = arr[start + size_left : end+1]
+ 
    
     #Pointers to current elements in all three arays
     i = 0     # Initial index of first temporary array
@@ -64,19 +64,23 @@ def merge(arr, start, mid, end):
 Function to sort a array using merger sort algorithm
 
 :param arr: The array which is to be merged
+:param type: list
 :param start: The index of first element to be sorted
+:param type: int
 :param end: The index of last element to be sorted
+:param type: int
 """
 def mergeSort(arr,start,end): 
-    if start < end: 
+    if start >= end:
+        return 
   
-        mid = (start+(end-1))//2
+    mid = (start+(end-1))//2
   
-        # Dividing array into two halves and sorting both the halves first
-        mergeSort(arr, start, mid) 
-        mergeSort(arr, mid+1, end) 
-        # Merging the already sorted arrays into one
-        merge(arr, start, mid, end)
+    # Dividing array into two halves and sorting both the halves first
+    mergeSort(arr, start, mid) 
+    mergeSort(arr, mid+1, end) 
+    # Merging the already sorted arrays into one
+    merge(arr, start, mid, end)
 
 
 
@@ -84,7 +88,9 @@ def mergeSort(arr,start,end):
 Function to return index of a number in a sorted 2D array using binary search algorithm (w.r.t. first coloumn)
 
 :param arr: The arr in which number is to be searched
+:param type: list
 :param number: The number to be searched
+:param type: float
 
 :return: index of number in array
 """
